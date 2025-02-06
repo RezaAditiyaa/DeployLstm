@@ -58,5 +58,6 @@ def predict():
             return render_template('index.html', error=error_message)
     return render_template('index.html')
 
-if __name__ == '__main__':
-    app.run(debug=False)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=False)
+
