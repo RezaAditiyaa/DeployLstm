@@ -17,16 +17,8 @@ def text_to_sequence(text, tokenizer, max_len=100):
     padded_sequence = pad_sequences(sequences, maxlen=max_len, padding='post')
     return padded_sequence
 
-# Fungsi untuk menentukan label sentimen
-def sentimen_label_with_probability(prediction):
-    probability_positive = prediction
-    probability_negative = 1 - prediction
-    
-    sentiment_label = 'Positif' if probability_positive > 0.6 else 'Negatif'
-    return sentiment_label, probability_positive, probability_negative
-
 # Streamlit UI
-st.title("🧠 Analisis Sentimen dengan LSTM")
+st.title("🧠 Analisis Sentimen Indonesia Emas 2045")
 
 # Input teks
 text = st.text_area("Masukkan teks untuk dianalisis:")
@@ -35,12 +27,15 @@ if st.button("Prediksi Sentimen"):
     if text:
         try:
             processed_text = text_to_sequence(text, tokenizer)
-            predicted_sentimen = model.predict(processed_text)[0][0]
-            predicted_sentimen_label, prob_pos, prob_neg = sentimen_label_with_probability(predicted_sentimen)
+            probability_sentiment = model.predict(processed_text)[0][0]
+            
+            # Aturan baru: Positif jika lebih dari 0.8
+            predicted_sentimen_label = 'Positif' if probability_sentiment > 0.8 else 'Negatif'
 
+            # Tampilkan hasil
             st.write(f"### **Prediksi Sentimen: {predicted_sentimen_label}**")
-            st.write(f"📊 **Probabilitas Positif:** {round(prob_pos, 4)}")
-            st.write(f"📉 **Probabilitas Negatif:** {round(prob_neg, 4)}")
+            st.write(f"📊 **Probabilitas Sentimen:** {round(probability_sentiment, 4)}")
+            
         except Exception as e:
             st.error(f"Terjadi kesalahan: {e}")
     else:
